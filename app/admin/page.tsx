@@ -41,7 +41,7 @@ export default function AdminAuth() {
 
 
   // Simuler une vérification d'authentification
-  const handleLogin = (e) => {
+  const handleLogin = (e:any) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -65,7 +65,7 @@ export default function AdminAuth() {
   };
 
   // Simuler l'envoi d'un email de réinitialisation
-  const handleForgotPassword = (e) => {
+  const handleForgotPassword = (e:any) => {
     e.preventDefault();
     if (!email) {
       setError('Veuillez saisir votre adresse email.');
