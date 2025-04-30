@@ -1,18 +1,21 @@
+// app/api/contact/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { contactSchema } from '@/validators/schema';
 import { getCorsHeaders } from '@/lib/cors';
 
 // OPTIONS : gérer le préflight CORS
-export function OPTIONS(req: NextRequest) {
-  const origin = req.headers.get('origin');
-  const headers = getCorsHeaders(origin);
-  return new NextResponse(null, { status: 200, headers });
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  return new NextResponse(null, { 
+    status: 200, 
+    headers: getCorsHeaders(origin)
+  });
 }
 
 // GET: récupérer les contacts
-export async function GET(req: NextRequest) {
-  const origin = req.headers.get('origin');
+export async function GET(request: NextRequest) {
+  const origin = request.headers.get('origin');
   const headers = getCorsHeaders(origin);
 
   try {
@@ -33,12 +36,12 @@ export async function GET(req: NextRequest) {
 }
 
 // POST: créer un contact
-export async function POST(req: NextRequest) {
-  const origin = req.headers.get('origin');
+export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin');
   const headers = getCorsHeaders(origin);
 
   try {
-    const data = await req.json();
+    const data = await request.json();
     const parsed = contactSchema.safeParse(data);
 
     if (!parsed.success) {
@@ -53,6 +56,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ status: 'success', message: 'Message sent successfully' }, { headers });
   } catch (err) {
+    console.error('Error in POST /contact:', err);
     return NextResponse.json({ status: 'error', message: 'Internal Server Error' }, { status: 500, headers });
   }
 }
