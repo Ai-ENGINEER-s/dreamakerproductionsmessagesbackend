@@ -56,17 +56,51 @@ export default function AdminDashboard() {
   });
 
   // Fetch data
+// Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log('Attempting to fetch data...');
+        console.log('Fetching data from API...');
         
-        // Simulating API calls with a timeout
-        setTimeout(() => {
-          addTestData();
-          setLoading(false);
-        }, 1000);
+        // Real API calls to fetch contacts and subscribers
+        const [contactsRes, subscribersRes] = await Promise.all([
+          fetch('/api/contact'),
+          fetch('/api/newsletter')
+        ]);
+        
+        // Check if responses were successful
+        if (!contactsRes.ok) {
+          throw new Error(`Failed to fetch contacts: ${contactsRes.status}`);
+        }
+        
+        if (!subscribersRes.ok) {
+          throw new Error(`Failed to fetch subscribers: ${subscribersRes.status}`);
+        }
+        
+        // Parse response data
+        const contactsData = await contactsRes.json();
+        const subscribersData = await subscribersRes.json();
+        
+        // Update state with fetched data
+        setContacts(contactsData);
+        setSubscribers(subscribersData);
+        
+        // Add analytics data (still using mock data for analytics)
+        setAnalyticsData({
+          pageViews: 12845,
+          uniqueVisitors: 5732,
+          bounceRate: "42.3%",
+          avgSessionDuration: "3m 24s",
+          topPages: [
+            { page: "/home", views: 4532 },
+            { page: "/films", views: 3211 },
+            { page: "/about", views: 1876 },
+            { page: "/contact", views: 1226 }
+          ]
+        });
+        
+        setLoading(false);
       } catch (err:any) {
         console.error('Error fetching data:', err);
         setError(`Unable to load data: ${err.message}`);
@@ -76,7 +110,6 @@ export default function AdminDashboard() {
 
     fetchData();
   }, []);
-
   // Add test data
   const addTestData = () => {
     setContacts([
