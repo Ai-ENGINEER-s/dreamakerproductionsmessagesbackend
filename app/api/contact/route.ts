@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { sendEmail } from '@/lib/brevo';
 import { contactSchema } from '@/validators/schema';
-import { handleCors } from '@/lib/cors';
+import { getCorsHeaders } from '@/lib/cors';
+
+// OPTIONS : gérer le préflight CORS
+export function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
+  return new NextResponse(null, { status: 200, headers });
+}
 
 // GET: récupérer les contacts
 export async function GET(req: NextRequest) {
-  const corsHeaders = handleCors(req);
-  if (corsHeaders instanceof NextResponse) return corsHeaders;
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
 
   try {
     const contacts = await prisma.contactMessage.findMany({
@@ -16,27 +22,27 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(contacts, { headers: corsHeaders });
+    return NextResponse.json(contacts, { headers });
   } catch (error) {
     console.error('Error fetching contacts:', error);
     return NextResponse.json(
       { status: 'error', message: 'Failed to fetch contacts' },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers }
     );
   }
 }
 
 // POST: créer un contact
 export async function POST(req: NextRequest) {
-  const corsHeaders = handleCors(req);
-  if (corsHeaders instanceof NextResponse) return corsHeaders;
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
 
   try {
     const data = await req.json();
     const parsed = contactSchema.safeParse(data);
 
     if (!parsed.success) {
-      return NextResponse.json({ status: 'error', message: 'Invalid input' }, { status: 400, headers: corsHeaders });
+      return NextResponse.json({ status: 'error', message: 'Invalid input' }, { status: 400, headers });
     }
 
     const { fullName, email, phone, message } = parsed.data;
@@ -45,10 +51,8 @@ export async function POST(req: NextRequest) {
       data: { fullName, email, phone, message },
     });
 
-    // await sendEmail({ ... });
-
-    return NextResponse.json({ status: 'success', message: 'Message sent successfully' }, { headers: corsHeaders });
+    return NextResponse.json({ status: 'success', message: 'Message sent successfully' }, { headers });
   } catch (err) {
-    return NextResponse.json({ status: 'error', message: 'Internal Server Error' }, { status: 500, headers: corsHeaders });
+    return NextResponse.json({ status: 'error', message: 'Internal Server Error' }, { status: 500, headers });
   }
 }

@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { newsletterSchema } from '@/validators/schema';
-import { handleCors } from '@/lib/cors';
+import { getCorsHeaders } from '@/lib/cors';
 
-// GET handler
+// OPTIONS: gestion du préflight
+export function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
+  return new NextResponse(null, { status: 200, headers });
+}
+
+// GET: récupérer les abonnés
 export async function GET(req: NextRequest) {
-  const corsHeaders = handleCors(req);
-  if (corsHeaders instanceof NextResponse) return corsHeaders;
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
 
   try {
     const subscribers = await prisma.newsletterSubscriber.findMany({
@@ -15,27 +22,30 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(subscribers, { headers: corsHeaders });
+    return NextResponse.json(subscribers, { headers });
   } catch (error) {
     console.error('Error fetching subscribers:', error);
     return NextResponse.json(
       { status: 'error', message: 'Failed to fetch subscribers' },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers }
     );
   }
 }
 
-// POST handler
+// POST: inscription à la newsletter
 export async function POST(req: NextRequest) {
-  const corsHeaders = handleCors(req);
-  if (corsHeaders instanceof NextResponse) return corsHeaders;
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
 
   try {
     const data = await req.json();
     const parsed = newsletterSchema.safeParse(data);
 
     if (!parsed.success) {
-      return NextResponse.json({ status: 'error', message: 'Invalid email' }, { status: 400, headers: corsHeaders });
+      return NextResponse.json(
+        { status: 'error', message: 'Invalid email' },
+        { status: 400, headers }
+      );
     }
 
     const { email } = parsed.data;
@@ -46,10 +56,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { status: 'success', message: 'You have been subscribed to the newsletter' },
-      { headers: corsHeaders }
+      { headers }
     );
   } catch (err) {
     console.error('Error in POST /newsletter:', err);
-    return NextResponse.json({ status: 'error', message: 'Internal Server Error' }, { status: 500, headers: corsHeaders });
+    return NextResponse.json(
+      { status: 'error', message: 'Internal Server Error' },
+      { status: 500, headers }
+    );
   }
 }
