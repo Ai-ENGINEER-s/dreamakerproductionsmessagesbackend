@@ -40,11 +40,11 @@ export async function POST(req: Request) {
     });
 
     // Envoi de l'email de confirmation
-    await sendEmail({
-      to: email,
-      subject: "Confirmation d'abonnement",
-      html: `<p>Merci de vous être abonné à notre newsletter !</p>`
-    });
+    // await sendEmail({
+    //   to: email,
+    //   subject: "Confirmation d'abonnement",
+    //   html: `<p>Merci de vous être abonné à notre newsletter !</p>`
+    // });
 
     return NextResponse.json({ status: 'success', message: 'You have been subscribed to the newsletter' });
   } catch (err) {

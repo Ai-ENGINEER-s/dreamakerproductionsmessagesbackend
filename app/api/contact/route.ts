@@ -38,11 +38,11 @@ export async function POST(req: Request) {
       data: { fullName, email, phone, message },
     });
 
-    await sendEmail({
-      to: 'barrysanoussa19@gmail.com',
-      subject: 'Nouveau message de contact',
-      html: `<p><strong>Nom:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Téléphone:</strong> ${phone || 'N/A'}</p><p><strong>Message:</strong><br>${message}</p>`
-    });
+    // await sendEmail({
+    //   to: 'barrysanoussa19@gmail.com',
+    //   subject: 'Nouveau message de contact',
+    //   html: `<p><strong>Nom:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Téléphone:</strong> ${phone || 'N/A'}</p><p><strong>Message:</strong><br>${message}</p>`
+    // });
 
     return NextResponse.json({ status: 'success', message: 'Message sent successfully' });
   } catch (err) {
