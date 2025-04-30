@@ -6,12 +6,17 @@ export function handleCors(req: NextRequest) {
 
   const headers = {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+    'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
   };
 
+  // Pour les requêtes prévol (préflight)
   if (req.method === 'OPTIONS') {
-    return new NextResponse(null, { status: 204, headers });
+    return new NextResponse(null, {
+      status: 200,
+      headers,
+    });
   }
 
   return headers;
