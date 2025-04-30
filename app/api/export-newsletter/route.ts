@@ -9,14 +9,20 @@ export async function GET() {
       }
     });
     
+
+    interface Subscriber {
+  id: number;
+  email: string;
+  subscribedAt: Date;
+}
     // Créer le contenu CSV
     let csvContent = 'id,email,subscribedAt\n';
     
-    subscribers.forEach(subscriber => {
-      const subscribedAtFormatted = subscriber.subscribedAt.toISOString();
-      csvContent += `${subscriber.id},"${subscriber.email}","${subscribedAtFormatted}"\n`;
-    });
-    
+subscribers.forEach((subscriber: Subscriber) => {
+  const subscribedAtFormatted = subscriber.subscribedAt.toISOString();
+  csvContent += `${subscriber.id},"${subscriber.email}","${subscribedAtFormatted}"\n`;
+});
+
     // Créer la réponse avec les bons headers
     const response = new NextResponse(csvContent);
     
