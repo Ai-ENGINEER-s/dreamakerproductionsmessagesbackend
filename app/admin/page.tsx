@@ -16,22 +16,22 @@ export default function AdminAuth() {
 
   const router = useRouter();
 
-  // Vérifier le localStorage pour le mode sombre et la session au chargement
+  // Check localStorage for dark mode and session on load
   useEffect(() => {
-    // Vérification du mode sombre
+    // Check dark mode
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     setDarkMode(savedDarkMode);
 
-    // Vérification de l'authentification
+    // Check authentication
     const isAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
     if (isAuthenticated) {
       router.push('/admin/dashboard');
     }
-  }, []);  // Suppression de la dépendance router
+  }, []);  // Removed router dependency
 
-  // Mettre à jour le localStorage quand le mode sombre change
+  // Update localStorage when dark mode changes
   useEffect(() => {
-    localStorage.setItem('darkMode', String(darkMode)); // ✅ conversion explicite
+    localStorage.setItem('darkMode', String(darkMode)); // ✅ explicit conversion
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -40,49 +40,49 @@ export default function AdminAuth() {
   }, [darkMode]);
 
 
-  // Simuler une vérification d'authentification
+  // Simulate authentication check
   const handleLogin = (e:any) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
     
-    // Simuler un appel API avec un délai
+    // Simulate API call with delay
     setTimeout(() => {
-      // Vérification des identifiants (à remplacer par une véritable API)
+      // Credential verification (to be replaced by a real API)
       if (email === 'admin@dreammaker.fr' && password === 'admin123') {
-        // Stocker l'authentification dans localStorage
+        // Store authentication in localStorage
         localStorage.setItem('adminAuthenticated', 'true');
         localStorage.setItem('adminEmail', email);
-        // Rediriger vers le dashboard avec un délai pour s'assurer que le localStorage est mis à jour
+        // Redirect to dashboard with delay to ensure localStorage is updated
         setTimeout(() => {
           router.push('/admin/dashboard');
         }, 100);
       } else {
-        setError('Identifiants incorrects. Veuillez réessayer.');
+        setError('Incorrect credentials. Please try again.');
         setIsLoading(false);
       }
     }, 1000);
   };
 
-  // Simuler l'envoi d'un email de réinitialisation
+  // Simulate reset email sending
   const handleForgotPassword = (e:any) => {
     e.preventDefault();
     if (!email) {
-      setError('Veuillez saisir votre adresse email.');
+      setError('Please enter your email address.');
       return;
     }
     
     setIsLoading(true);
     
-    // Simuler un appel API avec un délai
+    // Simulate API call with delay
     setTimeout(() => {
-      console.log(`Email de réinitialisation envoyé à l'administrateur pour: ${email}`);
+      console.log(`Reset email sent to administrator for: ${email}`);
       setEmailSent(true);
       setIsLoading(false);
     }, 1000);
   };
 
-  // Classes conditionnelles basées sur le mode sombre
+  // Conditional classes based on dark mode
   const pageClasses = darkMode ? 'bg-gray-950 text-gray-100' : 'bg-gray-50 text-gray-800';
   const cardClasses = darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100';
   const inputClasses = darkMode ? 'bg-gray-800 border-gray-700 text-gray-100' : 'bg-white border-gray-300 text-gray-800';
@@ -91,7 +91,7 @@ export default function AdminAuth() {
   return (
     <div className={`min-h-screen ${pageClasses} font-sans flex items-center justify-center p-4`}>
       <div className={`max-w-md w-full ${cardClasses} rounded-2xl shadow-xl p-8 border`}>
-        {/* Logo et titre */}
+        {/* Logo and title */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center mb-4 shadow-lg">
             <Film size={28} />
@@ -107,16 +107,16 @@ export default function AdminAuth() {
 
         {forgotPasswordMode ? (
           emailSent ? (
-            // Message de confirmation pour le mot de passe oublié
+            // Confirmation message for forgot password
             <div className="text-center">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
                   <Mail size={28} className="text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <h2 className="text-xl font-semibold mb-2">Demande envoyée</h2>
+              <h2 className="text-xl font-semibold mb-2">Request Sent</h2>
               <p className={`mb-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Un email a été envoyé à l'administrateur pour réinitialiser votre accès. Vous serez contacté prochainement.
+                An email has been sent to the administrator to reset your access. You will be contacted soon.
               </p>
               <button
                 onClick={() => {
@@ -125,15 +125,15 @@ export default function AdminAuth() {
                 }}
                 className={`w-full py-3 rounded-xl text-white transition-all ${buttonBgClasses} flex items-center justify-center gap-2`}
               >
-                Retour à la connexion <ArrowRight size={16} />
+                Back to Login <ArrowRight size={16} />
               </button>
             </div>
           ) : (
-            // Formulaire de mot de passe oublié
+            // Forgot password form
             <div>
-              <h2 className="text-xl font-semibold mb-2">Mot de passe oublié</h2>
+              <h2 className="text-xl font-semibold mb-2">Forgot Password</h2>
               <p className={`mb-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Saisissez votre email ci-dessous pour contacter l'administrateur afin de réinitialiser votre accès.
+                Enter your email below to contact the administrator to reset your access.
               </p>
               
               {error && (
@@ -155,7 +155,7 @@ export default function AdminAuth() {
                     <input
                       type="email"
                       className={`w-full pl-10 pr-4 py-3 rounded-xl border focus:ring-2 focus:ring-blue-500 transition-all ${inputClasses}`}
-                      placeholder="votre@email.com"
+                      placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -173,7 +173,7 @@ export default function AdminAuth() {
                         : 'border-gray-300 text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    Annuler
+                    Cancel
                   </button>
                   <button
                     type="submit"
@@ -183,11 +183,11 @@ export default function AdminAuth() {
                     {isLoading ? (
                       <>
                         <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent"></span>
-                        Envoi...
+                        Sending...
                       </>
                     ) : (
                       <>
-                        Contacter l'admin
+                        Contact Admin
                       </>
                     )}
                   </button>
@@ -196,7 +196,7 @@ export default function AdminAuth() {
               
               <div className="mt-6 text-center">
                 <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                  Vous pouvez aussi contacter l'administrateur directement à l'adresse :
+                  You can also contact the administrator directly at:
                 </p>
                 <a 
                   href="mailto:barrysanoussa19@gmail.com" 
@@ -208,11 +208,11 @@ export default function AdminAuth() {
             </div>
           )
         ) : (
-          // Formulaire de connexion
+          // Login form
           <div>
-            <h2 className="text-xl font-semibold mb-2">Connexion administrateur</h2>
+            <h2 className="text-xl font-semibold mb-2">Administrator Login</h2>
             <p className={`mb-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Veuillez vous connecter pour accéder à l'espace d'administration
+              Please log in to access the administration area
             </p>
             
             {error && (
@@ -244,7 +244,7 @@ export default function AdminAuth() {
               
               <div className="mb-6">
                 <label className={`block mb-2 text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Mot de passe
+                  Password
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -280,11 +280,11 @@ export default function AdminAuth() {
                 {isLoading ? (
                   <>
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent"></span>
-                    Connexion...
+                    Logging in...
                   </>
                 ) : (
                   <>
-                    Se connecter <ArrowRight size={16} />
+                    Log in <ArrowRight size={16} />
                   </>
                 )}
               </button>
@@ -296,7 +296,7 @@ export default function AdminAuth() {
                   className={`inline-flex items-center ${darkMode ? 'text-blue-400' : 'text-blue-600'} hover:underline`}
                 >
                   <HelpCircle size={16} className="mr-1" />
-                  Mot de passe oublié ?
+                  Forgot password?
                 </button>
               </div>
             </form>
@@ -309,7 +309,7 @@ export default function AdminAuth() {
             onClick={() => setDarkMode(!darkMode)}
             className={`text-sm ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}
           >
-            {darkMode ? '🌞 Mode clair' : '🌙 Mode sombre'}
+            {darkMode ? '🌞 Light mode' : '🌙 Dark mode'}
           </button>
         </div>
       </div>
