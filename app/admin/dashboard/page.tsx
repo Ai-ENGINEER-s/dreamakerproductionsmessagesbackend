@@ -312,7 +312,7 @@ export default function AdminDashboard() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-500 text-white flex items-center justify-center mr-3 shadow-lg">
               <Film size={20} />
             </div>
-            <span className="font-light">Dream<span className="font-bold">Maker</span></span>
+            <span className="font-light">Dreamaker Proudions</span>
           </h1>
         </div>
         

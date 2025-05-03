@@ -97,8 +97,8 @@ export default function AdminAuth() {
             <Film size={28} />
           </div>
           <h1 className="text-2xl font-bold text-center">
-            <span className="font-light">Dream</span>
-            <span className="font-bold">Maker</span>
+            <span className="font-light">Dreamaker Productions </span>
+           
             <span className="block text-sm mt-1 font-normal text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Administration
             </span>
